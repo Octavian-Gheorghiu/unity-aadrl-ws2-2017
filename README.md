@@ -1,4 +1,4 @@
-# unity-aadrl-ws2-2017
+![Screenshot](CA_View.jpg)
 <p><strong>AADRL | Workshop 2 </strong></p>
 <p><strong>Tutors:</strong> Mustafa el Sayed, Octavian Gheorghiu</p>
 <p><strong>Description:</strong> Unity code developed during the second workshop at the Architectural Association, DRL, 2017.</p>
