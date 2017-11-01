@@ -6,9 +6,12 @@ public class CA_Grid : MonoBehaviour {
 
 	// VARIABLES
 
+	// Texture to be used as start of CA input
+	public Texture2D seedImage;
+
 	// Array for storing voxels
-	public int width = 20;
-	public int length = 20;
+	int width;
+	int length;
 	GameObject[,] voxelGrid;
 
 	// Reference to the voxel we are using
@@ -21,6 +24,10 @@ public class CA_Grid : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		// Read the image width and height
+		width = seedImage.width;
+		length = seedImage.height;
+		// Create a new CA grid
 		CreateGrid ();
 	}
 	
@@ -42,15 +49,15 @@ public class CA_Grid : MonoBehaviour {
 	void CreateGrid(){
 		// Allocate space in memory for the array
 		voxelGrid = new GameObject[width, length];
-		// Populate the array with voxels, randomly alive
+		// Populate the array with voxels from a base image
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < length; j++) {
 				// Create values for the transfrom of the new voxel
 				Vector3 currentVoxelPos = new Vector3 (i*spacing,0,j*spacing);
 				Quaternion currentVoxelRot = Quaternion.identity;
 				GameObject currentVoxel = Instantiate (voxelPrefab, currentVoxelPos, currentVoxelRot);
-				// Create a new random state
-				int currentVoxelState = Random.Range (0, 2);
+				// Create a new state based on the input image
+				int currentVoxelState = (int)seedImage.GetPixel(i,j).grayscale;
 				// Set the state of the new voxel
 				currentVoxel.GetComponent<Voxel> ().SetState (currentVoxelState);
 				// Attach the new voxel to the grid game object
@@ -61,6 +68,7 @@ public class CA_Grid : MonoBehaviour {
 		}
 	}
 
+	// Caluclate CA function
 	void CalculateCA(){
 		// Go over all the voxels stored in the voxels array
 		for (int i = 1; i < width-1; i++) {
@@ -68,7 +76,6 @@ public class CA_Grid : MonoBehaviour {
 				GameObject currentVoxel = voxelGrid[i,j];
 				int currentVoxelState = currentVoxel.GetComponent<Voxel> ().GetState ();
 				int aliveNeighbours = 0;
-				int currentVoxelFutureState = 0;
 
 				// Calculate how many alive neighbours are oround the current voxel
 				for (int x = -1; x <= 1; x++) {

@@ -20,15 +20,16 @@ public class Voxel : MonoBehaviour {
 		MaterialPropertyBlock props = new MaterialPropertyBlock ();
 		MeshRenderer renderer;
 		if (state == 0) {
-			props.SetColor("_Color", new Color(1,1,1,0));
-
+			// Disable the renderer
 			renderer = gameObject.GetComponent<MeshRenderer> ();
-			renderer.SetPropertyBlock (props);
+			renderer.enabled = false;
 		}
 		if (state == 1) {
-			props.SetColor("_Color", Color.black);
-
+			// Enable the renderer
 			renderer = gameObject.GetComponent<MeshRenderer> ();
+			renderer.enabled = true;
+			// Set the color to black
+			props.SetColor("_Color", Color.black);
 			renderer.SetPropertyBlock (props);
 		}
 	}
