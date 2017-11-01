@@ -5,50 +5,46 @@ using UnityEngine;
 public class Voxel : MonoBehaviour {
 
 	// VARIABLES
-	int alive;
-	Color voxelColor;
-
-	// CONSTRUCTOR
-	Voxel(int _alive){
-		alive = _alive;
-		// Am I alive or not? Set color based on state.
-		if (alive == 1) {
-			voxelColor = Color.black;
-		} else {
-			voxelColor = Color.white;
-		}
-	}
+	int state = 0;
+	int futureState = 0;
 
 	// FUNCTIONS
 	
 	// Update function
-	void Update () {
-		// Am I alive or not? Set color based on state.
-		if (alive == 1) {
-			voxelColor = Color.black;
-		} else {
-			voxelColor = Color.white;
+	public void Update () {
+		state = futureState;
+	}
+
+	// Display the voxel
+	public void DisplayVoxel(){
+		MaterialPropertyBlock props = new MaterialPropertyBlock ();
+		MeshRenderer renderer;
+		if (state == 0) {
+			props.SetColor("_Color", new Color(1,1,1,0));
+
+			renderer = gameObject.GetComponent<MeshRenderer> ();
+			renderer.SetPropertyBlock (props);
+		}
+		if (state == 1) {
+			props.SetColor("_Color", Color.black);
+
+			renderer = gameObject.GetComponent<MeshRenderer> ();
+			renderer.SetPropertyBlock (props);
 		}
 	}
 
 	// Set the state of the voxel
 	public void SetState(int _state){
-		alive = _state;
+		state = _state;
+	}
+
+	// Set the future state of the voxel
+	public void SetFutureState(int _futureState){
+		futureState = _futureState;
 	}
 
 	// Get the state of the voxel
 	public int GetState(){
-		return alive;
-	}
-
-	// Set the color of the voxel
-	public void SetColor(){
-		if (alive == 1) {
-			voxelColor = Color.black;
-			this.GetComponent<MeshRenderer> ().material.color = voxelColor;
-		} else {
-			voxelColor = Color.white;
-			this.GetComponent<MeshRenderer> ().material.color = voxelColor;
-		}
+		return state;
 	}
 }
