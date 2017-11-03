@@ -39,7 +39,7 @@ public class CA_Grid : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        // Increment time frame
+        // Calculate the CA state, save the new state, display the CA and increment time frame
         if (currentFrame < timeEnd - 1)
         {
             // Calculate the future state of the voxels
@@ -55,18 +55,30 @@ public class CA_Grid : MonoBehaviour {
             }
             // Save the CA state
             SaveCA();
+            // Display the printed voxels
+            for (int i = 0; i < width; i++)
+            {
+                for (int j = 0; j < length; j++)
+                {
+                    for (int k = 1; k < height; k++)
+                    {
+                        voxelGrid[i, j, k].GetComponent<Voxel>().VoxelDisplay();
+                    }
+                }
+            }
+            // Increment the current frame count
             currentFrame++;
         }
-
-        // Display the printed voxels
-        for (int i = 0; i < width; i++)
+        // Spin the CA if spacebar is pressed (be careful, GPU instancing will be lost!)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            for (int j = 0; j < length; j++)
+            if (gameObject.GetComponent<ModelDisplay>() == null)
             {
-                for (int k = 1; k < height; k++)
-                {
-                    voxelGrid[i, j, k].GetComponent<Voxel>().VoxelDisplay();
-                }
+                gameObject.AddComponent<ModelDisplay>();
+            }
+            else 
+            {
+                Destroy(gameObject.GetComponent<ModelDisplay>());
             }
         }
     }
@@ -147,6 +159,7 @@ public class CA_Grid : MonoBehaviour {
 		}
 	}
 
+    // Save the CA states
 	void SaveCA(){
 		for(int i =0; i< width; i++){
 			for (int j = 0; j < length; j++) {

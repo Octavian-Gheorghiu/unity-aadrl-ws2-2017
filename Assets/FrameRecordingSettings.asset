@@ -28,7 +28,7 @@ MonoBehaviour:
   m_FrameRate: 30
   m_FrameRateExact: 64
   m_StartFrame: 0
-  m_EndFrame: 100
+  m_EndFrame: 300
   m_StartTime: 0
   m_EndTime: 120
   m_DurationMode: 2
@@ -38,7 +38,7 @@ MonoBehaviour:
     m_Pattern: Movie_1.<ext>
   m_DestinationPath:
     m_root: 0
-    m_leaf: C:/Users/octav/Desktop/Videos
+    m_leaf: C:/Users/ogheorghiu/Desktop/Videos
   m_InputsSettings:
   - {fileID: 114658540719189760}
   m_RecorderTypeName: UTJ.FrameCapturer.Recorders.MP4Recorder, Assembly-CSharp, Version=0.0.0.0,

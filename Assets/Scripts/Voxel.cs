@@ -5,11 +5,12 @@ using UnityEngine;
 public class Voxel : MonoBehaviour {
 
 	// VARIABLES
-	public int state = 0;
+	private int state = 0;
     private int futureState = 0;
-    public int age = 0;
-    int timeEndReference;
+    private int age = 0;
+    private int timeEndReference;
     private MaterialPropertyBlock props;
+    private new MeshRenderer renderer;
 
     // FUNCTIONS
 
@@ -17,7 +18,8 @@ public class Voxel : MonoBehaviour {
     {
         timeEndReference = GameObject.Find("CA_Grid").GetComponent<CA_Grid>().timeEnd;
         props = new MaterialPropertyBlock();
-        gameObject.GetComponent<MeshRenderer>().enabled = false;
+        renderer = gameObject.GetComponent<MeshRenderer>();
+        renderer.enabled = false;
     }
 	
 	// Update function
@@ -39,9 +41,6 @@ public class Voxel : MonoBehaviour {
     // Update the voxel display
     public void VoxelDisplay()
     {
-        // Get the game object mesh renderer
-        MeshRenderer renderer;
-        renderer = gameObject.GetComponent<MeshRenderer>();
         if (state == 1)
         {            
             // Remap the color to age
