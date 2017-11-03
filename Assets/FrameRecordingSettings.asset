@@ -28,7 +28,7 @@ MonoBehaviour:
   m_FrameRate: 30
   m_FrameRateExact: 64
   m_StartFrame: 0
-  m_EndFrame: 240
+  m_EndFrame: 100
   m_StartTime: 0
   m_EndTime: 120
   m_DurationMode: 2
