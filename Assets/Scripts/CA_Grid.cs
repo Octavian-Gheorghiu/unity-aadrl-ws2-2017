@@ -25,6 +25,12 @@ public class CA_Grid : MonoBehaviour {
 	// Spacing between voxels
 	float spacing = 1.0f;
 
+	// Voxel trace line points
+	List<Vector3> linePoints;
+	public GameObject tracedLines;
+	public Color c1 = Color.red;
+	public Color c2 = Color.blue;
+
 	// FUNCTIONS
 
 	// Use this for initialization
@@ -81,6 +87,13 @@ public class CA_Grid : MonoBehaviour {
                 Destroy(gameObject.GetComponent<ModelDisplay>());
             }
         }
+		// Trace the top voxels and show/hide them
+		if(currentFrame == timeEnd-1){
+			if(Input.GetKeyDown(KeyCode.T)){
+				TraceCA ();
+				gameObject.SetActive (false);
+			}
+		}
     }
 
 	// Create grid function
@@ -95,7 +108,7 @@ public class CA_Grid : MonoBehaviour {
 					Vector3 currentVoxelPos = new Vector3 (i*spacing,k*spacing,j*spacing);
 					Quaternion currentVoxelRot = Quaternion.identity;
 					GameObject currentVoxel = Instantiate (voxelPrefab, currentVoxelPos, currentVoxelRot);
-                    currentVoxel.GetComponent<Voxel>().SetupVoxel();
+					currentVoxel.GetComponent<Voxel>().SetupVoxel(i,j,k,1);
                     // Set the state of the voxels
                     if (k == 0) {						
 						// Create a new state based on the input image
@@ -175,5 +188,76 @@ public class CA_Grid : MonoBehaviour {
                 }
 			}
 		}
+	}
+
+	// Trace CA
+	void TraceCA(){
+		// Save in a list all the alive voxels from the last layer
+		List<GameObject> aliveVoxels = new List<GameObject> ();
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < length; j++) {
+				GameObject currentVoxel = voxelGrid [i,j,height-2];
+				if(currentVoxel.GetComponent<Voxel>().GetState() == 1){
+					aliveVoxels.Add (currentVoxel);
+				}
+			}
+		}
+		// Get a random alive voxel from the last layer
+		for (int i = 0; i < aliveVoxels.Count; i++) {
+			GameObject randomVoxel = aliveVoxels[i];
+			// Initalize the list that will save the polyline points
+			linePoints = new List<Vector3> ();
+			linePoints.Add (randomVoxel.GetComponent<Transform>().position);
+			// Generate path below
+			int currentHeight = height-2;
+			while (currentHeight > 1) {
+				// Get the oldest voxel below the currentVoxel
+				int currentI = (int) randomVoxel.GetComponent<Voxel> ().address.x;
+				int currentJ = (int) randomVoxel.GetComponent<Voxel> ().address.y;
+				int currentK = (int) randomVoxel.GetComponent<Voxel> ().address.z;
+				Vector2 oldestVoxelBelowAddress = PathCalculator (currentI, currentJ, currentK);
+				GameObject oldestVoxelBelow = voxelGrid [(int)oldestVoxelBelowAddress.x, (int)oldestVoxelBelowAddress.y, (int)currentK-1];
+				// Add the position of the oldest voxel below the the polyline list
+				linePoints.Add(oldestVoxelBelow.GetComponent<Transform>().position);
+				// Set the current voxel to the oldest voxel below
+				randomVoxel = oldestVoxelBelow;
+				// Start calculation for the layer below
+				currentHeight--;
+			}
+			// Create a line render based on the traced path
+			GameObject currentLine = new GameObject();
+			currentLine.name = "line(" + i.ToString ()+")";
+			currentLine.transform.parent = tracedLines.transform;
+			LineRenderer lineRenderer = currentLine.AddComponent<LineRenderer>();
+			lineRenderer.material = new Material (Shader.Find("Particles/Additive"));
+			lineRenderer.widthMultiplier = 0.2f;
+			lineRenderer.positionCount = linePoints.Count;
+			float alpha = 1.0f;
+			Gradient gradient = new Gradient();
+			gradient.SetKeys(
+				new GradientColorKey[] { new GradientColorKey(c1, 0.0f), new GradientColorKey(c2, 1.0f) },
+				new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
+			);
+			lineRenderer.colorGradient = gradient;
+			lineRenderer.SetPositions (linePoints.ToArray());
+		}
+	}
+
+	// Path calculator
+	Vector2 PathCalculator(int i, int j, int k){
+		int oldestAge = 0;
+		Vector2 voxelWithOldestAgeAddress = new Vector2(0,0);
+		for (int x = -1; x <= 1; x++) {
+			for (int y = -1; y <= 1; y++) {
+				GameObject currentVoxel = voxelGrid [i + x, j + y, k - 1];
+				int currentVoxelAge = currentVoxel.GetComponent<Voxel> ().GetAge();
+				if (currentVoxelAge > oldestAge) {
+					oldestAge = currentVoxelAge;
+					voxelWithOldestAgeAddress.x = i + x;
+					voxelWithOldestAgeAddress.y = j + y;
+				}
+			}
+		}
+		return voxelWithOldestAgeAddress;
 	}
 }

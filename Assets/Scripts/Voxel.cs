@@ -11,15 +11,38 @@ public class Voxel : MonoBehaviour {
     private int timeEndReference;
     private MaterialPropertyBlock props;
     private new MeshRenderer renderer;
+	public Vector3 address;
+	public MeshFilter type1Mesh, type2Mesh, type3Mesh;
+	int type;
 
     // FUNCTIONS
 
-    public void SetupVoxel()
+	public void SetupVoxel(int i, int j, int k, int _type)
     {
         timeEndReference = GameObject.Find("CA_Grid").GetComponent<CA_Grid>().timeEnd;
         props = new MaterialPropertyBlock();
         renderer = gameObject.GetComponent<MeshRenderer>();
         renderer.enabled = false;
+		address = new Vector3 (i,j,k);
+		type = _type;
+		switch (type) {
+		case 1:
+			MeshFilter setMesh = gameObject.GetComponent<MeshFilter> ();
+			setMesh = type1Mesh;
+			break;
+		case 2:
+			MeshFilter setMesh2 = gameObject.GetComponent<MeshFilter> ();
+			setMesh2 = type2Mesh;
+			break;
+		case 3:
+			MeshFilter setMesh3 = gameObject.GetComponent<MeshFilter> ();
+			setMesh3 = type3Mesh;
+			break;	
+		default:
+			MeshFilter setMeshDefault = gameObject.GetComponent<MeshFilter> ();
+			setMeshDefault = type3Mesh;
+			break;
+		}
     }
 	
 	// Update function
