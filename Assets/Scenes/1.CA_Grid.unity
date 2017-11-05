@@ -275,8 +275,8 @@ MonoBehaviour:
   voxelPrefab: {fileID: 1616800205886906, guid: 89dc1ddd83b58e6449a7261a55346020,
     type: 2}
   tracedLines: {fileID: 1359135615}
-  c1: {r: 1, g: 0, b: 0, a: 1}
-  c2: {r: 0, g: 0.37931037, b: 1, a: 1}
+  tracedLinesColorStart: {r: 1, g: 0, b: 0, a: 1}
+  tracedLinesColorEnd: {r: 0, g: 0, b: 1, a: 1}
 --- !u!4 &1330653061
 Transform:
   m_ObjectHideFlags: 0

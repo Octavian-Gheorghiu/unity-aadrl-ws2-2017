@@ -28,8 +28,8 @@ public class CA_Grid : MonoBehaviour {
 	// Voxel trace line points
 	List<Vector3> linePoints;
 	public GameObject tracedLines;
-	public Color c1 = Color.red;
-	public Color c2 = Color.blue;
+	public Color tracedLinesColorStart = Color.red;
+	public Color tracedLinesColorEnd = Color.blue;
 
 	// FUNCTIONS
 
@@ -229,14 +229,14 @@ public class CA_Grid : MonoBehaviour {
 			currentLine.name = "line(" + i.ToString ()+")";
 			currentLine.transform.parent = tracedLines.transform;
 			LineRenderer lineRenderer = currentLine.AddComponent<LineRenderer>();
-			lineRenderer.material = new Material (Shader.Find("Particles/Additive"));
+			lineRenderer.material = new Material (Shader.Find("Particles/Multiply"));
 			lineRenderer.widthMultiplier = 0.2f;
 			lineRenderer.positionCount = linePoints.Count;
 			float alpha = 1.0f;
 			Gradient gradient = new Gradient();
 			gradient.SetKeys(
-				new GradientColorKey[] { new GradientColorKey(c1, 0.0f), new GradientColorKey(c2, 1.0f) },
-				new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.0f), new GradientAlphaKey(alpha, 1.0f) }
+				new GradientColorKey[] { new GradientColorKey(tracedLinesColorStart, 0.0f), new GradientColorKey(tracedLinesColorEnd, 1.0f) },
+				new GradientAlphaKey[] { new GradientAlphaKey(alpha, 0.5f), new GradientAlphaKey(alpha, 1.0f) }
 			);
 			lineRenderer.colorGradient = gradient;
 			lineRenderer.SetPositions (linePoints.ToArray());
